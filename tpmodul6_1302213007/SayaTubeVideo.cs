@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 namespace tpmodul6_1302213007;
 
 public class SayaTubeVideo
@@ -9,6 +10,9 @@ public class SayaTubeVideo
 
     public SayaTubeVideo(string title)
     {
+        Contract.Requires(title != null);
+        Contract.Requires(title.Length <= 100);
+        
         Random rand = new Random();
         id = rand.Next(10000, 99999);
         this.title = title;
@@ -17,7 +21,18 @@ public class SayaTubeVideo
 
     public void IncreasePlayCount(int count)
     {
-        playCount += count;
+        Contract.Requires(count <= 10000000);
+        try
+        {
+            checked
+            {
+                this.playCount += count;
+            }
+        }
+        catch (OverflowException ex)
+        {
+            Console.WriteLine("Error : {0} ", ex.Message);
+        }
     }
 
     public void PrintVideoDetails()
